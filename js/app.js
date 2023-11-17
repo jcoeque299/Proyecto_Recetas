@@ -28,21 +28,59 @@ function obtenerRecetas(e) {
     .then(data => mostrarRecetas(data.meals))
 }
 
-function mostrarRecetas(recetasRequest) {
-    limpiarHTML()
+function mostrarRecetas(recetasRequest = []) {
+    limpiarHTML(resultado)
     recetasRequest.forEach((receta) => {
-        const nombreRecetaHTML = document.createElement("p")
-        nombreRecetaHTML.textContent = receta.strMeal
-        const imagenRecetaHTML = document.createElement("a")
-        imagenRecetaHTML.href = receta.strMealThumb
-        imagenRecetaHTML.textContent = "Ver imagen"
-        resultado.appendChild(nombreRecetaHTML)
-        resultado.appendChild(imagenRecetaHTML)
+        const contenedorRecetas = document.createElement("div")
+        contenedorRecetas.classList.add("col-md-4")
+
+        const recetaCard = document.createElement("div")
+        recetaCard.classList.add("card", "mb-4")
+
+        const recetaCardBody = document.createElement("div")
+        recetaCardBody.classList.add("card-body")
+
+        const recetaHeading = document.createElement("h3")
+        recetaHeading.classList.add("cardtitle", "mb-3")
+        recetaHeading.textContent = receta.strMeal
+    
+        const imagenRecetaHTML = document.createElement("img")
+        imagenRecetaHTML.src = receta.strMealThumb
+        imagenRecetaHTML.alt = "Receta"
+
+        const añadirFavoritoHTML = document.createElement("button")
+        añadirFavoritoHTML.textContent = "Añadir a favoritos"
+        añadirFavoritoHTML.classList.add("btn", "btn-danger", "w-100")
+        
+        añadirFavoritoHTML.addEventListener("click", function() {
+            obtenerReceta(receta.idMeal)
+        })
+
+        recetaCard.appendChild(imagenRecetaHTML)
+        recetaCard.appendChild(recetaCardBody)
+
+        recetaCardBody.appendChild(recetaHeading)
+        recetaCardBody.appendChild(añadirFavoritoHTML)
+
+        contenedorRecetas.appendChild(recetaCard)
+
+        resultado.append(contenedorRecetas)
     })
 }
 
-function limpiarHTML() {
-    while (resultado.firstChild) {
-        resultado.removeChild(resultado.firstChild)
+function obtenerReceta(id) {
+    const urlReceta = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+    fetch(urlReceta)
+    .then(data => data.json())
+    .then(data => añadirFavorito(data.meals[0]))
+}
+
+function añadirFavorito(receta) {
+    console.log(receta)
+}
+
+function limpiarHTML(referencia) {
+    while (referencia.firstChild) {
+        referencia.removeChild(referencia.firstChild)
     }
 }
