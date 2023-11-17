@@ -83,6 +83,10 @@ function mostrarReceta(receta) {
     const modalBody = document.querySelector(".modal .modal-body")
     limpiarHTML(modalBody)
 
+    const modalBodyImage = document.createElement("img")
+    modalBodyImage.classList.add("img-fluid")
+    modalBodyImage.src = receta.strMealThumb
+
     const modalBodyInstructionsHeader = document.createElement("h3")
     modalBodyInstructionsHeader.classList.add("my-3")
     modalBodyInstructionsHeader.textContent = "Instrucciones"
@@ -90,13 +94,39 @@ function mostrarReceta(receta) {
     const modalBodyInstructions = document.createElement("p")
     modalBodyInstructions.textContent = receta.strInstructions
 
-    const modalBodyImage = document.createElement("img")
-    modalBodyImage.classList.add("img-fluid")
-    modalBodyImage.src = receta.strMealThumb
+    const modalBodyIngredientsHeader = document.createElement("h3")
+    modalBodyIngredientsHeader.classList.add("my-3")
+    modalBodyIngredientsHeader.textContent = "Ingredientes"
+
+    const modalBodyIngredients = document.createElement("ul")
+    modalBodyIngredients.classList.add("list-group")
+
+    for (let cont = 1; cont <= 20; cont++) {
+        const listElement = document.createElement("li")
+        listElement.classList.add("list-group-item")
+
+        const recetaIngrediente = receta[`strIngredient${cont}`]
+        const recetaCantidad = receta[`strMeasure${cont}`]
+
+        if (recetaIngrediente !== "" && recetaCantidad !== "") {
+            listElement.textContent = `${recetaCantidad} - ${recetaIngrediente}`
+            modalBodyIngredients.appendChild(listElement)
+        }
+    }
+
+    const modalFooter = document.querySelector(".modal .modal-footer")
+    
+    const btnFavoritos = document.createElement("button")
+    btnFavoritos.classList.add("btn", "btn-danger", "col")
+    btnFavoritos.textContent = "Añadir a favoritos"
+
+    modalFooter.appendChild(btnFavoritos)
 
     modalBody.appendChild(modalBodyImage)
     modalBody.appendChild(modalBodyInstructionsHeader)
     modalBody.appendChild(modalBodyInstructions)
+    modalBody.appendChild(modalBodyIngredientsHeader)
+    modalBody.appendChild(modalBodyIngredients)
 
     modal.show()
 }
