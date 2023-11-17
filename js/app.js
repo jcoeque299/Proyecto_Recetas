@@ -1,16 +1,11 @@
-const urlCategorias = "https://www.themealdb.com/api/json/v1/1/categories.php"
-
 const categorias = document.querySelector("#categorias")
 const resultado = document.querySelector("#resultado")
 
-document.addEventListener("DOMContentLoaded", iniciarApp)
+document.addEventListener("DOMContentLoaded", obtenerCategorias)
 categorias.addEventListener("change", obtenerRecetas)
 
-function iniciarApp() {
-    obtenerCategorias()
-}
-
 function obtenerCategorias() {
+    const urlCategorias = "https://www.themealdb.com/api/json/v1/1/categories.php"
     fetch(urlCategorias)
     .then(data => data.json())
     .then(data => crearCategorias(data.categories))
