@@ -1,5 +1,6 @@
 const categorias = document.querySelector("#categorias")
 const resultado = document.querySelector("#resultado")
+const modal = new bootstrap.Modal("#modal", {})
 
 document.addEventListener("DOMContentLoaded", obtenerCategorias)
 categorias.addEventListener("change", obtenerRecetas)
@@ -49,9 +50,9 @@ function mostrarRecetas(recetasRequest = []) {
         imagenRecetaHTML.alt = "Receta"
 
         const añadirFavoritoHTML = document.createElement("button")
-        añadirFavoritoHTML.textContent = "Añadir a favoritos"
+        añadirFavoritoHTML.textContent = "Ver receta"
         añadirFavoritoHTML.classList.add("btn", "btn-danger", "w-100")
-        
+
         añadirFavoritoHTML.addEventListener("click", function() {
             obtenerReceta(receta.idMeal)
         })
@@ -72,11 +73,32 @@ function obtenerReceta(id) {
     const urlReceta = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
     fetch(urlReceta)
     .then(data => data.json())
-    .then(data => añadirFavorito(data.meals[0]))
+    .then(data => mostrarReceta(data.meals[0]))
 }
 
-function añadirFavorito(receta) {
-    console.log(receta)
+function mostrarReceta(receta) {
+    const modalTitle = document.querySelector(".modal .modal-title")
+    modalTitle.textContent = receta.strMeal
+
+    const modalBody = document.querySelector(".modal .modal-body")
+    limpiarHTML(modalBody)
+
+    const modalBodyInstructionsHeader = document.createElement("h3")
+    modalBodyInstructionsHeader.classList.add("my-3")
+    modalBodyInstructionsHeader.textContent = "Instrucciones"
+
+    const modalBodyInstructions = document.createElement("p")
+    modalBodyInstructions.textContent = receta.strInstructions
+
+    const modalBodyImage = document.createElement("img")
+    modalBodyImage.classList.add("img-fluid")
+    modalBodyImage.src = receta.strMealThumb
+
+    modalBody.appendChild(modalBodyImage)
+    modalBody.appendChild(modalBodyInstructionsHeader)
+    modalBody.appendChild(modalBodyInstructions)
+
+    modal.show()
 }
 
 function limpiarHTML(referencia) {
